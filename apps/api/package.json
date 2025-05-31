@@ -20,7 +20,6 @@
     "cors": "^2.8.5",
     "db": "*",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "jwt": "^0.2.0"
+    "jsonwebtoken": "^9.0.2"
   }
 }
