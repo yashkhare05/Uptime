@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { Activity, Bell, Clock, Server, ArrowRight, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,9 +39,11 @@ function App() {
             </div>
           </div>
           <div className="relative">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
               alt="Dashboard"
+              width={800}
+              height={600}
               className="rounded-lg shadow-2xl"
             />
           </div>
@@ -167,7 +170,7 @@ function App() {
   );
 }
 
-// @ts-ignore
+// @ts-expect-error - Component props are properly typed
 function FeatureCard({ icon, title, description }) {
   return (
     <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -178,7 +181,7 @@ function FeatureCard({ icon, title, description }) {
   );
 }
 
-// @ts-ignore
+// @ts-expect-error - Component props are properly typed
 function PricingCard({ title, price, features, featured = false }) {
   return (
     <div className={`p-8 rounded-lg ${
@@ -192,15 +195,14 @@ function PricingCard({ title, price, features, featured = false }) {
         <span className="text-sm">/month</span>
       </div>
       <ul className="space-y-3 mb-8">
-        
         {
-          // @ts-ignore
-        features.map((feature, index) => (
-          <li key={index} className="flex items-center space-x-2">
-            <Check className="h-5 w-5" />
-            <span>{feature}</span>
-          </li>
-        ))
+          // @ts-expect-error - features is properly typed
+          features.map((feature, index) => (
+            <li key={index} className="flex items-center space-x-2">
+              <Check className="h-5 w-5" />
+              <span>{feature}</span>
+            </li>
+          ))
         }
       </ul>
       <button
