@@ -22,6 +22,7 @@ model Website {
   id        String      @id     @default(uuid())
   url       String
   userId    String
+  notificationEmail String?
   ticks     WebsiteTick[]
   disabled  Boolean     @default(false)
 }

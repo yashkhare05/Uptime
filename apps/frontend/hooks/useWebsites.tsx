@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 interface Website {
     id: string;
     url: string;
+    notificationEmail?: string;
     ticks: {
         id: string;
         createdAt: string;

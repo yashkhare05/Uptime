@@ -77,10 +77,30 @@ interface ProcessedWebsite {
   uptimePercentage: number;
   lastChecked: string;
   uptimeTicks: UptimeStatus[];
+  notificationEmail?: string;
 }
 
 function WebsiteCard({ website }: { website: ProcessedWebsite }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [notificationEmail, setNotificationEmail] = useState(website.notificationEmail || '');
+  const { getToken } = useAuth();
+
+  const handleEmailUpdate = async () => {
+    const token = await getToken();
+    try {
+      await axios.put(
+        `${API_BACKEND_URL}/api/v1/website/${website.id}/notifications`,
+        { email: notificationEmail },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error updating notification email:', error);
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
@@ -111,6 +131,29 @@ function WebsiteCard({ website }: { website: ProcessedWebsite }) {
           <div className="mt-3">
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Last 30 minutes status:</p>
             <UptimeTicks ticks={website.uptimeTicks} />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Notification Email
+            </label>
+            <div className="flex space-x-2">
+              <input
+                type="email"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                placeholder="Enter email for notifications"
+                value={notificationEmail}
+                onChange={(e) => setNotificationEmail(e.target.value)}
+              />
+              <button
+                onClick={handleEmailUpdate}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Save
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              You will receive notifications when this website is down for more than 2 minutes
+            </p>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
             Last checked: {website.lastChecked}
@@ -177,6 +220,7 @@ function App() {
         uptimePercentage,
         lastChecked,
         uptimeTicks: windows,
+        notificationEmail: website.notificationEmail,
       };
     });
   }, [websites]);
